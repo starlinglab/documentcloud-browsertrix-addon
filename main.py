@@ -99,6 +99,8 @@ class Browsertrix(AddOn):
         with open(file_path, "rb") as f:
             self.upload_file(f)
 
+        self.set_message("")
+
 
 if __name__ == "__main__":
     Browsertrix().main()
