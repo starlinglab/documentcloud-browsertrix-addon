@@ -20,7 +20,7 @@ class Browsertrix(AddOn):
     def main(self):
         # First log in and get access token / JWT
         r = requests.post(
-            f"{SERVER}/auth/jwt/login",
+            f"{SERVER}/api/auth/jwt/login",
             data={"username": USERNAME, "password": PASSWORD},
         )
         r.raise_for_status()
@@ -46,14 +46,16 @@ class Browsertrix(AddOn):
             },
         }
         r = requests.post(
-            f"{SERVER}/archives/{AID}/crawlconfigs/", json=crawl_config, headers=headers
+            f"{SERVER}/api/archives/{AID}/crawlconfigs/",
+            json=crawl_config,
+            headers=headers,
         )
         r.raise_for_status()
         cid = r.json()["added"]
 
         # Start crawl
         r = requests.post(
-            f"{SERVER}/archives/{AID}/crawlconfigs/{cid}/run", headers=headers
+            f"{SERVER}/api/archives/{AID}/crawlconfigs/{cid}/run", headers=headers
         )
         r.raise_for_status()
         crawl_id = r.json()["started"]
@@ -62,7 +64,8 @@ class Browsertrix(AddOn):
         # Wait for crawl to finish
         while True:
             r = requests.get(
-                f"{SERVER}/api/archives/{AID}/crawls/{crawl_id}.json", headers=headers
+                f"{SERVER}/api/archives/{AID}/crawls/{crawl_id}.json",
+                headers=headers,
             )
             resp = r.json()
             if resp.get("finished"):
